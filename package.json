@@ -1,0 +1,27 @@
+{
+  "name": "vanilla-store",
+  "version": "0.0.0",
+  "description": "A JavaScript lib to store stuff",
+  "main": "Store.js",
+  "scripts": {
+    "test": "jasmine"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git@github.com:drublic/Store.git"
+  },
+  "keywords": [
+    "Store",
+    "Flux",
+    "React.js"
+  ],
+  "author": "Hans Christian Reinl <info@drublic.de> (https://drublic.de)",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/drublic/Store/issues"
+  },
+  "homepage": "https://github.com/drublic/Store",
+  "devDependencies": {
+    "jasmine": "^2.2.1"
+  }
+}
