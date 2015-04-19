@@ -166,25 +166,34 @@ void function (global) {
     },
 
     /**
-     * Update existing item in store
-     * @param  {String}  category Category to look out for
-     * @param  {Object}  item     New item
-     * @return {Boolean}          True, if update was ok; false if item does not exist
+     * Update existing items in store
+     * @param  {String}         category Category to look out for
+     * @param  {Array|Object}   items    New items
+     * @return {Object|Boolean}          True, if update was ok; false if item does not exist
      */
-    update: function (category, item) {
-      var storedItem = _Store.find(category, item.id);
+    update: function (category, items) {
 
+      // Ensure that we use an array
+      if (items.constructor !== Array) {
+        items = [items];
+      }
+
+      // If category does not exist, throw
       if (!_Store.storage[category]) {
         throw new Error('Store: Category "' + category + '" does not exist.');
       }
 
-      if (storedItem !== null) {
-        _Store.storage[category][storedItem.index] = extend(storedItem, item);
+      items.forEach(function (item) {
+        var storedItem = _Store.find(category, items.id);
 
-        return true;
-      }
+        if (storedItem !== null) {
+          _Store.storage[category][storedItem.index] = extend(storedItem, item);
 
-      return false;
+          return true;
+        }
+
+        return false;
+      });
     },
 
     /**
@@ -219,34 +228,34 @@ void function (global) {
     },
 
     /**
-     * Create a new item
+     * Create new items
      * @param  {String}       category Category to look out for
-     * @param  {Object}       item     Item that should be created
+     * @param  {Array|Object} items    Item that should be created
      * @return {Object|false}          Item or false
      */
-    create: function (category, item) {
+    create: function (category, items) {
       _Store.createCategory(category);
-      return _Store.create(category, item);
+      return _Store.create(category, items);
     },
 
     /**
-     * Update item in storage, proxy for private _Store.update
-     * @param  {Array}   category Category in store to find (first level)
-     * @param  {Object}  item     Item you want to find
-     * @return {Boolean}          Whether or not update was successfull
+     * Update items in storage, proxy for private _Store.update
+     * @param  {Array}        category Category in store to find (first level)
+     * @param  {Array|Object} items    Item you want to find
+     * @return {Boolean}               Whether or not update was successfull
      */
-    update: function (category, item) {
-      return _Store.update(category, item);
+    update: function (category, items) {
+      return _Store.update(category, items);
     },
 
     /**
      * Remove item from storage, proxy for private _Store.remove
      * @param  {Array}   category Category in store to find (first level)
-     * @param  {Array}   name    Name which you want to find
+     * @param  {Array}   ids      Name which you want to find
      * @return {Boolean}          Whether or not removal was successfull
      */
-    remove: function (category, name) {
-      return _Store.remove(category, name);
+    remove: function (category, ids) {
+      return _Store.remove(category, ids);
     },
 
     /**
