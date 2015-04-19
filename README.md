@@ -16,6 +16,12 @@ A JavaScript storing library
     Store.remove(String category, Array items|Object item);
     Store.clean(String category);
 
+## Dependencies
+
+If you want to store nested objects with Store please make sure to use a deep
+object extend function. You can do so by providing a global `extend` function,
+include jQuery or Lodash/Underscore.
+
 ## Tests
 
 Please run `npm run test`. Tests are written utilizing Jasmine.

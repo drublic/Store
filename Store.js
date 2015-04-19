@@ -8,10 +8,38 @@
  *   Store.remove(String category, Array items|Object item);
  *   Store.clean(String category);
  */
-void function () {
+void function (global) {
   'use strict';
 
+  /**
+   * Object extend, check for extend, jQuery.extend and _.extend, otherwise
+   * use own implementation
+   *
+   * @param  {Object} object1 Base object
+   * @param  {Object} object2 Object to merge in
+   * @return {Object}         Extended object
+   */
+  var extend = global.extend ||
+      (global.jQuery && global.jQuery.extend.bind(this, true)) ||
+      (global._ && global._.merge) || function (object1, object2) {
+    var i;
+
+     for (i in object2) {
+        if (object2.hasOwnProperty(i)) {
+          object1[i] = object2[i] || object1[i];
+        }
+     }
+
+     return object1;
+  };
+
+  // Store with methods
   var _Store = {
+
+    /**
+     * Internal storage object to save data
+     * @type {Object}
+     */
     storage: {},
 
     /**
@@ -267,4 +295,4 @@ void function () {
   } else if (typeof global === 'object' && typeof global.document === 'object') {
     global.Store = Store;
   }
-}();
+}(this);
