@@ -1,6 +1,6 @@
 {
   "name": "vanilla-store",
-  "version": "0.2.1",
+  "version": "0.2.2",
   "description": "A JavaScript lib to store stuff",
   "main": "Store.js",
   "scripts": {
