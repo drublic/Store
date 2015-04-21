@@ -184,7 +184,7 @@ void function (global) {
       }
 
       items.forEach(function (item) {
-        var storedItem = _Store.find(category, items.id);
+        var storedItem = _Store.find(category, item.id);
 
         if (storedItem !== null) {
           _Store.storage[category][storedItem.index] = extend(storedItem, item);
@@ -284,6 +284,9 @@ void function (global) {
       return _Store.clean(category);
     }
   };
+
+  // Make internal methods public for testing purposes
+  Store._Store = _Store;
 
 
   /*
