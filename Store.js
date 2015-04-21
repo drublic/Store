@@ -24,13 +24,13 @@ void function (global) {
       (global._ && global._.merge) || function (object1, object2) {
     var i;
 
-     for (i in object2) {
-        if (object2.hasOwnProperty(i)) {
-          object1[i] = object2[i] || object1[i];
-        }
-     }
+    for (i in object2) {
+       if (object2.hasOwnProperty(i)) {
+         object1[i] = object2[i];
+       }
+    }
 
-     return object1;
+    return object1;
   };
 
   // Store with methods
