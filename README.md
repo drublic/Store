@@ -3,6 +3,7 @@
 A JavaScript storing library
 
 [![Build Status](https://api.travis-ci.org/drublic/Store.svg)](http://travis-ci.org/drublic/Store)
+[![Coverage Status](https://coveralls.io/repos/drublic/Store/badge.svg?branch=master)](https://coveralls.io/r/drublic/Store?branch=master)
 
 ## Install
 
