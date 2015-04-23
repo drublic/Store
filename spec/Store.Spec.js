@@ -3,10 +3,223 @@
  *
  * Tests with Jasmine
  */
+// Just let the lib know, that we're in a test mode
+process.env.__test = {};
+
 var Store = require('../Store');
 
+// Extend functionallity
+var extend = function (object1, object2) {
+  var i;
+
+  for (i in object2) {
+     if (object2.hasOwnProperty(i)) {
+       object1[i] = object2[i];
+     }
+  }
+
+  return object1;
+};
+
 describe('Store', function () {
-  it('exisits', function () {
-    expect(Store).not.toBe(undefined);
+
+  beforeEach(function () {
+
+    // Clear storage
+    Store._Store.storage = {};
+
+    // Some test items to reuse
+    this.testItems = [{
+      id: '1',
+      foo: 'foo'
+    }, {
+      id: '2',
+      foo: 'bar'
+    }, {
+      id: '3',
+      foo: 'baz'
+    }]
+  });
+
+  it('has access to internal methods', function () {
+    expect(Store._Store).toBeDefined();
+  });
+
+  /**
+   * Public methods
+   */
+  describe('Public', function () {
+    it('creates entries', function () {
+      var item;
+      var createdItem = Store.create('foo', [{}, {}]);
+
+      item = Store._Store.storage.foo;
+
+      // Check return value
+      expect(createdItem instanceof Object).toEqual(true);
+      expect(createdItem).toEqual(item);
+
+      expect(item instanceof Array).toEqual(true);
+      expect(item.length).toEqual(2);
+    });
+
+    it('finds entries', function () {
+      var item;
+
+      Store.create('foo', [this.testItems[0]]);
+
+      item = Store.get('foo', '1');
+
+      expect(item).toBeDefined();
+      expect(item.index).toEqual(0);
+      expect(item.foo).toEqual('foo');
+
+      item = Store.get('foo', '2');
+
+      expect(item).toEqual(null);
+
+    });
+
+    it('updates entries', function () {
+      var items;
+      var createdItems;
+
+      createdItems = Store.create('foo', [this.testItems[0], {}]);
+
+      items = Store._Store.storage.foo;
+
+      expect(items instanceof Array).toEqual(true);
+      expect(items.length).toEqual(2);
+      expect(createdItems[0].bar).not.toBeDefined();
+
+      Store.update('foo', extend(this.testItems[0], {
+        bar: 'bar'
+      }));
+
+      items = Store._Store.storage.foo;
+
+      expect(items instanceof Array).toEqual(true);
+      expect(items.length).toEqual(2);
+      expect(items[0].bar).toBeDefined();
+      expect(items[0].bar).toEqual('bar');
+    });
+
+    it('removes entries', function () {
+      var items;
+      var createdItems = Store.create('foo', [
+        this.testItems[0],
+        this.testItems[1],
+        this.testItems[2]
+      ]);
+
+      items = Store._Store.storage.foo;
+
+      expect(items instanceof Array).toEqual(true);
+      expect(items.length).toEqual(3);
+
+      Store.remove('foo', '1');
+
+      items = Store._Store.storage.foo;
+
+      expect(items instanceof Array).toEqual(true);
+      expect(items.length).toEqual(2);
+      expect(items[0].id).not.toEqual('1');
+
+      Store.remove('foo', ['2', '3']);
+
+      items = Store._Store.storage.foo;
+
+      expect(items instanceof Array).toEqual(true);
+      expect(items.length).toEqual(0);
+    });
+
+    it('gets full storage', function () {
+      var createdItems = Store.create('foo', [
+        this.testItems[0],
+        this.testItems[1],
+        this.testItems[2]
+      ]);
+
+      var storage = Store.getAll();
+
+      expect(storage).toEqual({
+        foo: createdItems
+      });
+    });
+
+    it('gets all elements by one category', function () {
+      var createdItems = Store.create('foo', [
+        this.testItems[0],
+        this.testItems[1],
+        this.testItems[2]
+      ]);
+
+      var storage = Store.getAllByCategory('foo');
+
+      expect(storage).toEqual(createdItems);
+    });
+
+    it('cleans (removes all elements) from one category', function () {
+      var items;
+      var createdItems = Store.create('foo', this.testItems[0]);
+
+      Store.clean('foo');
+
+      expect(Store._Store.storage.foo).toEqual({});
+    });
+  });
+
+  describe('Internal', function () {
+
+    /**
+     * Create
+     */
+    it('creates category if there is none', function () {
+      var item = Store._Store.storage.foo;
+
+      expect(item).toBeUndefined();
+
+      Store.create('foo', this.testItems[0]);
+
+      item = Store._Store.storage.foo;
+
+      expect(item).toBeDefined();
+      expect(item instanceof Array).toEqual(true);
+    });
+
+    it('creates single entry', function () {
+      var item;
+
+      Store.create('foo', this.testItems[0]);
+
+      item = Store._Store.storage.foo;
+
+      expect(item instanceof Array).toEqual(true);
+      expect(item.length).toEqual(1);
+      expect(item[0].id).toEqual('1');
+    });
+
+    it('creates item which has an index', function () {
+      var item;
+
+      Store.create('foo', this.testItems[0]);
+
+      item = Store._Store.storage.foo;
+
+      expect(item[0].index).toBeDefined();
+      expect(item[0].index).toEqual(0);
+    });
+
+    it('creates multiple entries', function () {
+      var item;
+
+      Store.create('foo', [this.testItems[0], this.testItems[1]]);
+
+      item = Store._Store.storage.foo;
+
+      expect(item.length).toEqual(2);
+      expect(item[0].id).toEqual('1');
+      expect(item[1].id).toEqual('2');
+    });
   });
 });

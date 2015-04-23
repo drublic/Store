@@ -8,7 +8,7 @@
  *   Store.remove(String category, Array items|Object item);
  *   Store.clean(String category);
  */
-void function (global) {
+(function (global) {
   'use strict';
 
   /**
@@ -286,8 +286,9 @@ void function (global) {
   };
 
   // Make internal methods public for testing purposes
-  Store._Store = _Store;
-
+  if (process.env && process.env.__test) {
+    Store._Store = _Store;
+  }
 
   /*
    * AMD, module loader, global registration
@@ -307,4 +308,4 @@ void function (global) {
   } else if (typeof global === 'object' && typeof global.document === 'object') {
     global.Store = Store;
   }
-}(this);
+}(this));
