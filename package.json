@@ -4,7 +4,9 @@
   "description": "A JavaScript lib to store stuff",
   "main": "Store.js",
   "scripts": {
-    "test": "jasmine"
+    "coveralls": "istanbul cover jasmine-node --captureExceptions spec/ && cat ./coverage/lcov.info | ./node_modules/coveralls/bin/coveralls.js && rm -rf ./coverage",
+    "jasmine": "jasmine-node spec/",
+    "test": "npm run jasmine && npm run coveralls"
   },
   "repository": {
     "type": "git",
@@ -22,6 +24,8 @@
   },
   "homepage": "https://github.com/drublic/Store",
   "devDependencies": {
-    "jasmine": "^2.2.1"
+    "coveralls": "^2.11.2",
+    "istanbul": "^0.3.13",
+    "jasmine-node": "^1.14.5"
   }
 }
