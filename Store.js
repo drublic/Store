@@ -286,7 +286,7 @@
   };
 
   // Make internal methods public for testing purposes
-  if (process.env && process.env.__test) {
+  if (process && process.env && process.env.__test) {
     Store._Store = _Store;
   }
 
