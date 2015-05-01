@@ -215,80 +215,93 @@
   /**
    * API
    */
-  var Store = {
+  var Store = function (PubSub) {
 
-    /**
-     * Get item from storage, proxy for private _Store.find
-     * @param  {Array}       category Category in store to find (first level)
-     * @param  {String}      id       id which you want to find
-     * @return {null|Object}          Item which was found or null
-     */
-    get: function (category, id) {
-      return _Store.find(category, id);
-    },
+    var api = {
 
-    /**
-     * Create new items
-     * @param  {String}       category Category to look out for
-     * @param  {Array|Object} items    Item that should be created
-     * @return {Object|false}          Item or false
-     */
-    create: function (category, items) {
-      _Store.createCategory(category);
-      return _Store.create(category, items);
-    },
+      /**
+       * Get item from storage, proxy for private _Store.find
+       * @param  {Array}       category Category in store to find (first level)
+       * @param  {String}      id       id which you want to find
+       * @return {null|Object}          Item which was found or null
+       */
+      get: function (category, id) {
+        return _Store.find(category, id);
+      },
 
-    /**
-     * Update items in storage, proxy for private _Store.update
-     * @param  {Array}        category Category in store to find (first level)
-     * @param  {Array|Object} items    Item you want to find
-     * @return {Boolean}               Whether or not update was successfull
-     */
-    update: function (category, items) {
-      return _Store.update(category, items);
-    },
+      /**
+       * Create new items
+       * @param  {String}       category Category to look out for
+       * @param  {Array|Object} items    Item that should be created
+       * @return {Object|false}          Item or false
+       */
+      create: function (category, items) {
+        PubSub.publish(category + '.create');
 
-    /**
-     * Remove item from storage, proxy for private _Store.remove
-     * @param  {Array}   category Category in store to find (first level)
-     * @param  {Array}   ids      Name which you want to find
-     * @return {Boolean}          Whether or not removal was successfull
-     */
-    remove: function (category, ids) {
-      return _Store.remove(category, ids);
-    },
+        _Store.createCategory(category);
+        return _Store.create(category, items);
+      },
 
-    /**
-     * Get full storage
-     * @return {Object} Set full storage
-     */
-    getAll: function () {
-      return _Store.storage;
-    },
+      /**
+       * Update items in storage, proxy for private _Store.update
+       * @param  {Array}        category Category in store to find (first level)
+       * @param  {Array|Object} items    Item you want to find
+       * @return {Boolean}               Whether or not update was successfull
+       */
+      update: function (category, items) {
+        PubSub.publish(category + '.update');
 
-    /**
-     * Get all elements from a category
-     * @param  {Array} category Category in store to find (first level)
-     * @return {Array}          All items in category
-     */
-    getAllByCategory: function (category) {
-      return _Store.storage[category];
-    },
+        return _Store.update(category, items);
+      },
 
-    /**
-     * Clean up a category
-     * @param  {Array} category Category in store to find (first level)
-     * @return {Array}          Empty category
-     */
-    clean: function (category) {
-      return _Store.clean(category);
+      /**
+       * Remove item from storage, proxy for private _Store.remove
+       * @param  {Array}   category Category in store to find (first level)
+       * @param  {Array}   ids      Name which you want to find
+       * @return {Boolean}          Whether or not removal was successfull
+       */
+      remove: function (category, ids) {
+        PubSub.publish(category + '.remove');
+
+        return _Store.remove(category, ids);
+      },
+
+      /**
+       * Get full storage
+       * @return {Object} Set full storage
+       */
+      getAll: function () {
+        return _Store.storage;
+      },
+
+      /**
+       * Get all elements from a category
+       * @param  {Array} category Category in store to find (first level)
+       * @return {Array}          All items in category
+       */
+      getAllByCategory: function (category) {
+        return _Store.storage[category];
+      },
+
+      /**
+       * Clean up a category
+       * @param  {Array} category Category in store to find (first level)
+       * @return {Array}          Empty category
+       */
+      clean: function (category) {
+        PubSub.publish(category + '.clean');
+
+        return _Store.clean(category);
+      }
+    };
+
+    // Make internal methods public for testing purposes
+    if (process && process.env && process.env.__test) {
+      api._Store = _Store;
     }
-  };
 
-  // Make internal methods public for testing purposes
-  if (process && process.env && process.env.__test) {
-    Store._Store = _Store;
-  }
+    return api;
+  };
 
   /*
    * AMD, module loader, global registration
@@ -296,16 +309,18 @@
 
   // Expose loaders that implement the Node module pattern.
   if (typeof module === 'object' && module && typeof module.exports === 'object') {
-    module.exports = Store;
+    var PubSub = require('vanilla-pubsub');
+
+    module.exports = new Store(PubSub);
 
   // Register as an AMD module
   } else if (typeof define === 'function' && define.amd) {
-    define('Store', [], function () {
-      return Store;
+    define('Store', ['PubSub'], function (PubSub) {
+      return new Store(PubSub);
     });
 
   // Export into global space
   } else if (typeof global === 'object' && typeof global.document === 'object') {
-    global.Store = Store;
+    global.Store = new Store(window.PubSub);
   }
 }(this));

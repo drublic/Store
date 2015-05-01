@@ -6,6 +6,7 @@
 // Just let the lib know, that we're in a test mode
 process.env.__test = {};
 
+var PubSub = require('vanilla-pubsub');
 var Store = require('../Store');
 
 // Extend functionallity
@@ -167,6 +168,51 @@ describe('Store', function () {
 
       expect(Store._Store.storage.foo).toEqual({});
     });
+
+    /**
+     * Events
+     */
+    describe('Events', function () {
+      beforeEach(function () {
+        this.test = function () {};
+        spyOn(this, 'test');
+      });
+
+      it('fires event upon creation', function () {
+        PubSub.subscribe('Test.create', this.test);
+        Store.create('Test', {});
+
+        expect(this.test).toHaveBeenCalled();
+      });
+
+      it('fires event upon update', function () {
+        Store.create('Test', this.testItems[0]);
+        PubSub.subscribe('Test.update', this.test);
+
+        Store.update('Test', extend({ test: 'test' }, this.testItems[0]));
+
+        expect(this.test).toHaveBeenCalled();
+      });
+
+      it('fires event upon removal', function () {
+        Store.create('Test', this.testItems[0]);
+        PubSub.subscribe('Test.remove', this.test);
+
+        Store.remove('Test', this.testItems[0].id);
+
+        expect(this.test).toHaveBeenCalled();
+      });
+
+      it('fires event upon clean', function () {
+        Store.create('Test', this.testItems[0]);
+        PubSub.subscribe('Test.clean', this.test);
+
+        Store.clean('Test');
+
+        expect(this.test).toHaveBeenCalled();
+      });
+    });
+
   });
 
   describe('Internal', function () {

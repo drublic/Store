@@ -17,6 +17,15 @@ A JavaScript storing library
     Store.remove(String category, Array items|Object item);
     Store.clean(String category);
 
+## PubSub Events
+
+`Store.create`, `Store.update, `Store.remove` and `Store.clean` all trigger
+events with [PubSub](https://github.com/drublic/PubSub).
+These events can be used to trigger actions based on the according events.
+
+Calling `Store.create('Test', {…})` will trigger an event `Test.create`;
+`Store.update('Test', {…})` will trigger `Test.update`.
+
 ## Dependencies
 
 If you want to store nested objects with Store please make sure to use a deep
