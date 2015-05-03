@@ -3,6 +3,8 @@
  *
  * Tests with Jasmine
  */
+'use strict';
+
 // Just let the lib know, that we're in a test mode
 process.env.__test = {};
 
@@ -39,7 +41,7 @@ describe('Store', function () {
     }, {
       id: '3',
       foo: 'baz'
-    }]
+    }];
   });
 
   it('has access to internal methods', function () {
@@ -107,7 +109,7 @@ describe('Store', function () {
 
     it('removes entries', function () {
       var items;
-      var createdItems = Store.create('foo', [
+      Store.create('foo', [
         this.testItems[0],
         this.testItems[1],
         this.testItems[2]
@@ -161,11 +163,8 @@ describe('Store', function () {
     });
 
     it('cleans (removes all elements) from one category', function () {
-      var items;
-      var createdItems = Store.create('foo', this.testItems[0]);
-
+      Store.create('foo', this.testItems[0]);
       Store.clean('foo');
-
       expect(Store._Store.storage.foo).toEqual({});
     });
 

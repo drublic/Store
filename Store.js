@@ -26,7 +26,7 @@
 
     for (i in object2) {
        if (object2.hasOwnProperty(i)) {
-         object1[i] = object2[i];
+          object1[i] = object2[i];
        }
     }
 
@@ -214,6 +214,7 @@
 
   /**
    * API
+   * @return {Object}
    */
   var Store = function (PubSub) {
 
@@ -311,16 +312,16 @@
   if (typeof module === 'object' && module && typeof module.exports === 'object') {
     var PubSub = require('vanilla-pubsub');
 
-    module.exports = new Store(PubSub);
+    module.exports = Store(PubSub);
 
   // Register as an AMD module
   } else if (typeof define === 'function' && define.amd) {
     define('Store', ['PubSub'], function (PubSub) {
-      return new Store(PubSub);
+      return Store(PubSub);
     });
 
   // Export into global space
   } else if (typeof global === 'object' && typeof global.document === 'object') {
-    global.Store = new Store(window.PubSub);
+    global.Store = Store(window.PubSub);
   }
 }(this));
