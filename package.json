@@ -26,7 +26,7 @@
   "homepage": "https://github.com/drublic/Store",
   "devDependencies": {
     "coveralls": "^2.11.2",
-    "istanbul": "^0.3.13",
+    "istanbul": "^0.3.14",
     "jasmine-node": "^1.14.5"
   },
   "dependencies": {
