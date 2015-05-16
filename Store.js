@@ -197,16 +197,16 @@
     },
 
     /**
-     * Clean up a category tree
-     * @param  {Array}       category Category in store to find (first level)
-     * @return {Array|false}          Empty category, false if category not present
+     * Overwrite exisiting storage
+     * @param  {String}      category Category in store to find (first level)
+     * @return {Array|false}          Category data, false if categroy not present
      */
-    clean: function (category) {
+    restore: function (category, store) {
       if (!_Store.storage[category]) {
         return false;
       }
 
-      _Store.storage[category] = [];
+      _Store.storage[category] = store;
 
       return _Store.storage[category];
     }
@@ -292,7 +292,19 @@
       clean: function (category) {
         PubSub.publish(category + '.clean');
 
-        return _Store.clean(category);
+        return _Store.restore(category, []);
+      },
+
+
+      /**
+       * Set new store data for category
+       * @param  {Array} category Category in store to find (first level)
+       * @return {Array}          Category data
+       */
+      restore: function (category, store) {
+        PubSub.publish(category + '.restore');
+
+        return _Store.restore(category, store);
       }
     };
 

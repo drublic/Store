@@ -16,6 +16,7 @@ A JavaScript storing library
     Store.get(String category, String id);
     Store.remove(String category, Array items|Object item);
     Store.clean(String category);
+    Store.restore(String category, Array items);
 
 ## PubSub Events
 
@@ -24,7 +25,10 @@ events with [PubSub](https://github.com/drublic/PubSub).
 These events can be used to trigger actions based on the according events.
 
 Calling `Store.create('Test', {…})` will trigger an event `Test.create`;
-`Store.update('Test', {…})` will trigger `Test.update`.
+`Store.update('Test', {…})` will trigger `Test.update` and so on.
+
+Just requesting data with `getAll`, `getAllByCategory` and `find` does not
+publish events.
 
 ## Dependencies
 

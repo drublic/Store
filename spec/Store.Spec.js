@@ -165,7 +165,16 @@ describe('Store', function () {
     it('cleans (removes all elements) from one category', function () {
       Store.create('foo', this.testItems[0]);
       Store.clean('foo');
-      expect(Store._Store.storage.foo).toEqual({});
+      expect(Store._Store.storage.foo).toEqual([]);
+    });
+
+    it('sets new store for category', function () {
+      Store.create('foo', this.testItems[0]);
+      expect(Store._Store.storage.foo).toEqual([this.testItems[0]]);
+
+      Store.restore('foo', this.testItems);
+      expect(Store._Store.storage.foo.length).toEqual(this.testItems.length);
+      expect(Store._Store.storage.foo).toEqual(this.testItems);
     });
 
     /**
@@ -207,6 +216,15 @@ describe('Store', function () {
         PubSub.subscribe('Test.clean', this.test);
 
         Store.clean('Test');
+
+        expect(this.test).toHaveBeenCalled();
+      });
+
+      it('fires event upon restore', function () {
+        Store.create('Test', this.testItems[0]);
+        PubSub.subscribe('Test.restore', this.test);
+
+        Store.restore('Test', this.testItems);
 
         expect(this.test).toHaveBeenCalled();
       });
