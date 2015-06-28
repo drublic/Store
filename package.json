@@ -7,6 +7,7 @@
     "coveralls": "rm -rf ./coverage && npm run istanbul && cat ./coverage/lcov.info | ./node_modules/coveralls/bin/coveralls.js && rm -rf ./coverage",
     "istanbul": "istanbul cover jasmine-node --captureExceptions spec/",
     "jasmine": "jasmine-node --captureExceptions spec/",
+    "complexity": "plato -l .jshintrc -d ./complexity/ Store.js",
     "test": "npm run jasmine && npm run coveralls"
   },
   "repository": {
@@ -27,7 +28,8 @@
   "devDependencies": {
     "coveralls": "^2.11.2",
     "istanbul": "^0.3.14",
-    "jasmine-node": "^1.14.5"
+    "jasmine-node": "^1.14.5",
+    "plato": "^1.5.0"
   },
   "dependencies": {
     "vanilla-pubsub": "^1.1.2"
