@@ -20,7 +20,7 @@ A JavaScript storing library
 
 ## PubSub Events
 
-`Store.create`, `Store.update, `Store.remove` and `Store.clean` all trigger
+`Store.create`, `Store.update`, `Store.remove` and `Store.clean` all trigger
 events with [PubSub](https://github.com/drublic/PubSub).
 These events can be used to trigger actions based on the according events.
 
@@ -42,4 +42,4 @@ Please run `npm run test`. Tests are written utilizing Jasmine.
 
 ## License
 
-MIT - 2015, Hans Christian Reinl
+MIT - 2015-2017, Hans Christian Reinl
