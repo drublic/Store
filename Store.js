@@ -328,7 +328,7 @@
 
   // Register as an AMD module
   } else if (typeof define === 'function' && define.amd) {
-    define('Store', ['PubSub'], function (PubSub) {
+    define('Store', ['vanilla-pubsub'], function (PubSub) {
       return Store(PubSub);
     });
 
