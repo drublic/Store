@@ -12,16 +12,13 @@
   'use strict';
 
   /**
-   * Object extend, check for extend, jQuery.extend and _.extend, otherwise
-   * use own implementation
+   * Object extend, own implementation
    *
    * @param  {Object} object1 Base object
    * @param  {Object} object2 Object to merge in
    * @return {Object}         Extended object
    */
-  var extend = global.extend ||
-      (global.jQuery && global.jQuery.extend.bind(this, true)) ||
-      (global._ && global._.merge) || function (object1, object2) {
+  var extend = function (object1, object2) {
     var i;
 
     for (i in object2) {
